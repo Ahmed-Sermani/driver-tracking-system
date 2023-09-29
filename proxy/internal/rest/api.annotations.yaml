@@ -1,0 +1,22 @@
+type: google.api.Service
+config_version: 3
+http:
+  rules:
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Connect
+      post: /api/proxy/connect
+      body: "*"
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Refresh
+      post: /api/proxy/refresh
+      body: "*"
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Subscribe
+      post: /api/proxy/subscribe
+      body: "*"
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Publish
+      post: /api/proxy/publish
+      body: "*"
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.RPC
+      post: /api/proxy/rpc
+      body: "*"
+    - selector: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.SubRefresh
+      post: /api/proxy/sub-refresh
+      body: "*"

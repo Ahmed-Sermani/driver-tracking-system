@@ -1,0 +1,49 @@
+openapiOptions:
+  file:
+    - file: "proxypb/proxy.proto"
+      option:
+        info:
+          title: Proxy Operations
+          version: "1.0.0"
+        basePath: /
+  method:
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Connect
+      option:
+        operationId: connect
+        tags:
+          - Proxy
+        summary: called when a (external) client connects to Centrifugo.
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Refresh
+      option:
+        operationId: refresh
+        tags:
+          - Proxy
+        summary: called when a (external) client session is going to expire.
+
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Subscribe
+      option:
+        operationId: subscribe
+        tags:
+          - Proxy
+        summary: called when (external) clients try to subscribe on a channel.
+
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.Publish
+      option:
+        operationId: publish
+        tags:
+          - Proxy
+        summary: called when a (external) client tries to publish into a channel.
+
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.RPC
+      option:
+        operationId: rpc
+        tags:
+          - Proxy
+        summary: called when a client sends RPC.
+
+    - method: centrifugal.centrifugo.proxy.CentrifugoProxy.CentrifugoProxy.SubRefresh
+      option:
+        operationId: sub-refresh
+        tags:
+          - Proxy
+        summary: called when a (external) client subscription is going to expire.

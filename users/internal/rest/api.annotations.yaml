@@ -1,0 +1,12 @@
+type: google.api.Service
+config_version: 3
+http:
+  rules:
+    - selector: userspb.UsersService.RegisterUser
+      post: /api/users
+      body: "*"
+    - selector: userspb.UsersService.GetUser
+      get: /api/users/{id}
+    - selector: userspb.UsersService.Login
+      post: /api/users/login
+      body: "*"

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package emulationpb;
+
+import "google/protobuf/duration.proto";
+
+service EmulationService {
+  rpc StartEmulation(StartEmulationRequest) returns (StartEmulationResponse) {}
+}
+
+message StartEmulationRequest {
+  string channel = 1;
+  google.protobuf.Duration freq = 2;
+  google.protobuf.Duration duration = 3;
+}
+
+message StartEmulationResponse {}

@@ -1,0 +1,783 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Proxy Operations",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "CentrifugoProxy"
+    }
+  ],
+  "basePath": "/",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/proxy/connect": {
+      "post": {
+        "summary": "called when a (external) client connects to Centrifugo.",
+        "operationId": "connect",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyConnectResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyConnectRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    },
+    "/api/proxy/publish": {
+      "post": {
+        "summary": "called when a (external) client tries to publish into a channel.",
+        "operationId": "publish",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyPublishResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyPublishRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    },
+    "/api/proxy/refresh": {
+      "post": {
+        "summary": "called when a (external) client session is going to expire.",
+        "operationId": "refresh",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyRefreshResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyRefreshRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    },
+    "/api/proxy/rpc": {
+      "post": {
+        "summary": "called when a client sends RPC.",
+        "operationId": "rpc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyRPCResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxyRPCRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    },
+    "/api/proxy/sub-refresh": {
+      "post": {
+        "summary": "called when a (external) client subscription is going to expire.",
+        "operationId": "sub-refresh",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxySubRefreshResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxySubRefreshRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    },
+    "/api/proxy/subscribe": {
+      "post": {
+        "summary": "called when (external) clients try to subscribe on a channel.",
+        "operationId": "subscribe",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxySubscribeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CentrifugoProxySubscribeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proxy"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CentrifugoProxyBoolValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CentrifugoProxyChannelsCapability": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "match": {
+          "type": "string"
+        }
+      }
+    },
+    "CentrifugoProxyConnectRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CentrifugoProxyConnectResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxyConnectResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxyConnectResult": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string"
+        },
+        "expireAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "info": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64info": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CentrifugoProxySubscribeOptions"
+          }
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        },
+        "caps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/CentrifugoProxyChannelsCapability"
+          }
+        }
+      }
+    },
+    "CentrifugoProxyDisconnect": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "CentrifugoProxyError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "message": {
+          "type": "string"
+        },
+        "temporary": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CentrifugoProxyPublishRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "CentrifugoProxyPublishResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxyPublishResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxyPublishResult": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "skipHistory": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CentrifugoProxyRPCRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "CentrifugoProxyRPCResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxyRPCResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxyRPCResult": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        }
+      }
+    },
+    "CentrifugoProxyRefreshRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "CentrifugoProxyRefreshResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxyRefreshResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxyRefreshResult": {
+      "type": "object",
+      "properties": {
+        "expired": {
+          "type": "boolean"
+        },
+        "expireAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "info": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64info": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        },
+        "caps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/CentrifugoProxyChannelsCapability"
+          }
+        }
+      }
+    },
+    "CentrifugoProxySubRefreshRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "CentrifugoProxySubRefreshResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxySubRefreshResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxySubRefreshResult": {
+      "type": "object",
+      "properties": {
+        "expired": {
+          "type": "boolean"
+        },
+        "expireAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "info": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64info": {
+          "type": "string"
+        }
+      }
+    },
+    "CentrifugoProxySubscribeOptionOverride": {
+      "type": "object",
+      "properties": {
+        "presence": {
+          "$ref": "#/definitions/CentrifugoProxyBoolValue"
+        },
+        "joinLeave": {
+          "$ref": "#/definitions/CentrifugoProxyBoolValue"
+        },
+        "forceRecovery": {
+          "$ref": "#/definitions/CentrifugoProxyBoolValue"
+        },
+        "forcePositioning": {
+          "$ref": "#/definitions/CentrifugoProxyBoolValue"
+        },
+        "forcePushJoinLeave": {
+          "$ref": "#/definitions/CentrifugoProxyBoolValue"
+        }
+      }
+    },
+    "CentrifugoProxySubscribeOptions": {
+      "type": "object",
+      "properties": {
+        "expireAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "info": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64info": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "override": {
+          "$ref": "#/definitions/CentrifugoProxySubscribeOptionOverride"
+        }
+      }
+    },
+    "CentrifugoProxySubscribeRequest": {
+      "type": "object",
+      "properties": {
+        "client": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "format": "byte"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        }
+      }
+    },
+    "CentrifugoProxySubscribeResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/CentrifugoProxySubscribeResult"
+        },
+        "error": {
+          "$ref": "#/definitions/CentrifugoProxyError"
+        },
+        "disconnect": {
+          "$ref": "#/definitions/CentrifugoProxyDisconnect"
+        }
+      }
+    },
+    "CentrifugoProxySubscribeResult": {
+      "type": "object",
+      "properties": {
+        "expireAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "info": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64info": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "b64data": {
+          "type": "string"
+        },
+        "override": {
+          "$ref": "#/definitions/CentrifugoProxySubscribeOptionOverride"
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
