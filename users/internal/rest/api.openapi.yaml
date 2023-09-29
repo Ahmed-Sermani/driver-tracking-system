@@ -1,0 +1,28 @@
+openapiOptions:
+  file:
+    - file: "userspb/users.proto"
+      option:
+        info:
+          title: Users
+          version: "1.0.0"
+        basePath: /
+
+  method:
+    - method: userspb.UsersService.RegisterUser
+      option:
+        operationId: registerUser
+        tags:
+          - User
+        summary: Register a new user
+    - method: userspb.UsersService.GetUser
+      option:
+        operationId: getUser
+        tags:
+          - User
+        summary: Get a user
+    - method: userspb.UsersService.Login
+      option:
+        operationId: Login
+        tags:
+          - User
+        summary: Get user's token

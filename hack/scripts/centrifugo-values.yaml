@@ -1,0 +1,152 @@
+---
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: centrifugo/centrifugo
+  pullPolicy: IfNotPresent
+  tag: "v5.0.2-arm64v8"
+
+imagePullSecrets: []
+
+service:
+  port: 8000
+
+grpcService:
+  port: 10000
+
+uniGrpcService:
+  port: 11000
+
+ingress:
+  enabled: true
+
+  ingressClassName: "nginx"
+
+  pathType: Prefix
+  hosts:
+    - paths:
+        - /messaging/(.+)
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+  cpu:
+    enabled: true
+  memory:
+    enabled: true
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  # Custom or additional autoscaling metrics
+  # ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-metrics-apis
+  # ref: https://github.com/kubernetes-sigs/prometheus-adapter/
+  # - type: Pods
+  #   pods:
+  #     metric:
+  #       # kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/hpa_custom_metric_centrifugo_node_num_clients" | jq .
+  #       name: hpa_custom_metric_centrifugo_node_num_clients
+  #     target:
+  #       type: AverageValue
+  #       averageValue: 10000m # NOTE: # 10000m = 10 actual metric value (10 clients)
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+terminationGracePeriodSeconds: 30
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  #
+  # You can also tune sysctl, ex.:
+  # sysctls:
+  #   - name: net.core.somaxconn
+  #     value: "2048"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    namespace: monitoring
+
+envSecret: []
+
+config:
+  engine: "redis"
+  client_channel_limit: 5
+
+  # this limit is per node
+  client_user_connection_limit: 1
+
+  # proxy settings
+  proxy_connect_endpoint: "http://application.app:8080/api/proxy/connect"
+  proxy_connect_timeout: "1s"
+
+  proxy_refresh_endpoint: "http://application.app:8080/api/proxy/refresh"
+  proxy_refresh_timeout: "1s"
+
+  proxy_rpc_endpoint: "http://application.app:8080/api/proxy/rpc"
+  proxy_rpc_timeout: "1s"
+
+  proxy_publish_endpoint: "http://application.app:8080/api/proxy/publish"
+  proxy_publish_timeout: "1s"
+
+  proxy_subscribe_endpoint: "http://application.app:8080/api/proxy/subscribe"
+  proxy_subscribe_timeout: "1s"
+
+  admin: false
+
+  proxy_http_headers:
+    - "x-auth"
+    - "authorization"
+
+  allowed_origins:
+    - "*"
+
+  namespaces:
+    - name: deliveries
+      proxy_subscribe: true
+      proxy_connect: true
+      allow_history_for_client: true
+      history_size: 2
+      history_ttl: "3600s"
+
+initContainers:
+  - name: wait-for-redis
+    image: ghcr.io/patrickdappollonio/wait-for:latest
+    command:
+      - /wait-for
+    args:
+      - --host="redis-master.redis:6379"
+      - --timeout=240s
+      - --verbose
+
+secrets:
+  tokenHmacSecretKey: "token_hmac_secret_key"
+
+  adminPassword: "admin_password"
+
+  apiKey: "api_key"
+
+  grpcApiKey: "grpc_api_key"
+
+  redisAddress: "redis-master.redis:6379"
+
+  redisPassword: "your-password"

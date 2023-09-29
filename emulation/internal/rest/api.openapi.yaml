@@ -1,0 +1,15 @@
+openapiOptions:
+  file:
+    - file: "emulationpb/emulation.proto"
+      option:
+        info:
+          title: Emulation Operations
+          version: "1.0.0"
+        basePath: /
+  method:
+    - method: emulationpb.EmulationService.StartEmulation
+      option:
+        operationId: start
+        tags:
+          - Emulation
+        summary: starts publishing message on the target channel
